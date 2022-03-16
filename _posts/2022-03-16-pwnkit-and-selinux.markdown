@@ -18,7 +18,7 @@ We'll be running everything on a VM with a fresh install of Fedora 35.  I downgr
 First, lets get the vulnerability working in SELinux permissive mode:
 
 ```
-    $ sudo setenforce 0
+$ sudo setenforce 0
 ```
 
 We'll go back to enforcing once we have the exploit working.  The exploit code I wrote looked like this:
