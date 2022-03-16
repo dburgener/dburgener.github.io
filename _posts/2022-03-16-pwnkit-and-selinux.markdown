@@ -1,9 +1,10 @@
 ---
 layout: post
 title: "Pwnkit and SELinux"
-date: 2022-03-16 10:37:00 -0500
-categories: SELinux CVE
+date: 2022-03-16 10:37:00 -0000
+tags: SELinux CVE
 ---
+
 
 # Pwnkit and SELinux
 
