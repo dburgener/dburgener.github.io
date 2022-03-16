@@ -8,7 +8,7 @@ tags: SELinux CVE
 ## Introduction
 CVE-2021-4034, also known as "pwnkit" is a privilege escalation vulnerability found in the pkexec program, allowing an unprivileged user to obtain a root shell.  This post will investigate the ability of SELinux access controls to mitigate the impact of an exploitation of this vulnerability.
 
-Other sources have provided detailed techncial write-ups (for example, the [disclosure](https://www.qualys.com/2022/01/25/cve-2021-4034/pwnkit.txt) from Qualsys who reported the vulnerability: ), so we won't explore the technical details of the exploit itself in this post.  In brief, by abusing the (incorrect) assumption that the first argument to a program is always its filename, we can trick pkexec, which is typically installed as a setuid binary into writing some data from its command line arguments into its environmental variables.  This is helpful for exploitation, because certain environmental variables can have significant security impact, and are cleared at program startup (for details, see the [ld.so man page](https://man7.org/linux/man-pages/man8/ld.so.8.html)).  This method enables us to write to "secure" variables that have already been cleared.
+Other sources have provided detailed techncial write-ups (for example, the [disclosure](https://www.qualys.com/2022/01/25/cve-2021-4034/pwnkit.txt) from Qualys who reported the vulnerability: ), so we won't explore the technical details of the exploit itself in this post.  In brief, by abusing the (incorrect) assumption that the first argument to a program is always its filename, we can trick pkexec, which is typically installed as a setuid binary into writing some data from its command line arguments into its environmental variables.  This is helpful for exploitation, because certain environmental variables can have significant security impact, and are cleared at program startup (for details, see the [ld.so man page](https://man7.org/linux/man-pages/man8/ld.so.8.html)).  This method enables us to write to "secure" variables that have already been cleared.
 
 However, our exploitation window is limited, since pkexec clears its own environmental variables early in execution.  However, the researchers at Qualsys discovered that it is possible cause pkexec to attempt to write an error message, and load localization information by executing a library controled by an environmental variable that we set, resulting in arbitary code execution of that library inside the setuid pkexec binary, and therefore a privilege escalation to root.
 
@@ -87,7 +87,7 @@ On the Fedora targeted policy, webservers run as the domain `httpd_t`.  We can r
 ```
 $ sudo setenforce 1
 $ chcon -t httpd_exec_t a.out
-$ runcon -r -t httpd_t ./a.out
+$ runcon -r system_r -t httpd_t ./a.out
 $
 ```
 
