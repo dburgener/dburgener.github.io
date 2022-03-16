@@ -120,7 +120,7 @@ $ chcon -t httpd_tmp_t GCONV_PATH\=./pwnkit pwnkit/*
 Now we rerun our exploit:
 
 ```
-$ runcon -r -t httpd_t ./a.out
+$ runcon -r system_r -t httpd_t ./a.out
 $
 ```
 
@@ -134,7 +134,7 @@ However, this time there are no SELinux denials.  We know this worked in permiss
 
 ```
 $ semodule -DB
-$  runcon -r -t httpd_t ./a.out
+$ runcon -r system_r -t httpd_t ./a.out
 ```
 
 Ah-ha! Now checking our log shows some denials.  Four copies of this:
