@@ -103,7 +103,7 @@ We've successfully ran as the httpd domain, but as we mentioned above, the file 
 sesearch -A -s httpd_t -p write,execute -ep
 ```
 
-No results.  It's good practice to avoid granting the write and execute permission at the same time where possible to avoid exactly this sort of exploit, so this is nice to see.  However, if we dig in sesearch some more, we may eventually discover the following set of rules:
+No results.  It's good practice to avoid granting the write and execute permission at the same time where possible to avoid exactly this sort of exploit, so this is nice to see.  (Follow-up: After I made this post an astute reader [alerted](https://github.com/SELinuxProject/setools/issues/69) me to the fact that the -ep flag matches permissions exactly, rather than as a subset as I assumed above.  In fact httpd_t has write and execute permissions on files labeled `hugelbfs_t`.  This path is probably not exploitable however due to the lack of `create` or `rename` permissions in this case, preventing creation of malicious files with the correct name and directory structures.)  However, if we dig in sesearch some more, we may eventually discover the following set of rules:
 
 ```
 allow httpd_t httpd_tmp_t:file { create link map open rename setattr unlink watch watch_reads write };
